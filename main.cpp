@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <cmath>
 
 class Shape {
 protected:
@@ -12,11 +13,13 @@ public:
 
     virtual ~Shape() = default;
 
+    virtual bool isSameSpot(const Shape &other) const = 0;
+
+    virtual std::string getType() const = 0;
+
     std::pair<int, int> getPosition() const {
         return {x, y};
     }
-
-    virtual bool isSameSpot(const Shape &other) const = 0;
 };
 
 class Rectangle : public Shape {
@@ -46,6 +49,119 @@ public:
         return otherRect && otherRect->x == x && otherRect->y == y && otherRect->width == width &&
                otherRect->height == height;
     }
+
+    std::string getType() const override {
+        return "Rectangle";
+    }
+};
+
+class Circle : public Shape {
+private:
+    int radius;
+
+public:
+    Circle(int x, int y, int r) : Shape(x, y), radius(r) {}
+
+    void draw(std::vector<std::vector<char>> &board) const override {
+        int boardHeight = board.size();
+        int boardWidth = board[0].size();
+
+        for (int i = -radius; i <= radius; ++i) {
+            for (int j = -radius; j <= radius; ++j) {
+                int dist = i * i + j * j;
+                if (dist >= radius * radius - radius && dist <= radius * radius + radius) {
+                    int drawX = x + j;
+                    int drawY = y + i;
+                    if (drawX >= 0 && drawX < boardWidth && drawY >= 0 && drawY < boardHeight) {
+                        board[drawY][drawX] = '#';
+                    }
+                }
+            }
+        }
+    }
+
+    bool isSameSpot(const Shape &other) const override {
+        const Circle *otherCircle = dynamic_cast<const Circle *>(&other);
+        return otherCircle && otherCircle->x == x && otherCircle->y == y && otherCircle->radius == radius;
+    }
+
+    std::string getType() const override {
+        return "Circle";
+    }
+};
+
+class Triangle : public Shape {
+private:
+    int height;
+    int width;
+
+public:
+    Triangle(int x, int y, int h, int w) : Shape(x, y), height(h), width(w) {}
+
+    void draw(std::vector<std::vector<char>> &board) const override {
+        int boardHeight = board.size();
+        int boardWidth = board[0].size();
+
+        for (int i = 0; i < height; ++i) {
+            int leftX = x - (i * width / height) / 2;
+            int rightX = x + (i * width / height) / 2;
+            int drawY = y + i;
+
+            if (drawY >= 0 && drawY < boardHeight) {
+                if (leftX >= 0 && leftX < boardWidth) board[drawY][leftX] = '#';
+                if (rightX >= 0 && rightX < boardWidth) board[drawY][rightX] = '#';
+            }
+        }
+
+        for (int j = x - width / 2; j <= x + width / 2 && j < boardWidth; ++j) {
+            if (y + height - 1 >= 0 && y + height - 1 < boardHeight) {
+                board[y + height - 1][j] = '#';
+            }
+        }
+    }
+
+    bool isSameSpot(const Shape &other) const override {
+        const Triangle *otherTriangle = dynamic_cast<const Triangle *>(&other);
+        return otherTriangle && otherTriangle->x == x && otherTriangle->y == y && otherTriangle->height == height;
+    }
+
+    std::string getType() const override {
+        return "Triangle";
+    }
+};
+
+class Line : public Shape {
+private:
+    int length;
+    double angle;
+
+public:
+    Line(int x, int y, int l, double a) : Shape(x, y), length(l), angle(a) {}
+
+    void draw(std::vector<std::vector<char>> &board) const override {
+        int boardHeight = board.size();
+        int boardWidth = board[0].size();
+
+        double radAngle = angle * M_PI / 180.0;
+
+        for (int i = 0; i < length; ++i) {
+            int drawX = x + static_cast<int>(i * cos(radAngle));
+            int drawY = y + static_cast<int>(i * sin(radAngle));
+
+            if (drawX >= 0 && drawX < boardWidth && drawY >= 0 && drawY < boardHeight) {
+                board[drawY][drawX] = '#';
+            }
+        }
+    }
+
+    bool isSameSpot(const Shape &other) const override {
+        const Line *otherLine = dynamic_cast<const Line *>(&other);
+        return otherLine && otherLine->x == x && otherLine->y == y && otherLine->length == length;
+    }
+
+    std::string getType() const override {
+        return "Line";
+    }
 };
 
 class Blackboard {
@@ -69,7 +185,7 @@ public:
 
         for (int i = 0; i < height; ++i) {
             for (int j = 0; j < width; ++j) {
-                std::cout << board[i][j] << " ";
+                std::cout << board[i][j] << ' ';
             }
             std::cout << std::endl;
         }
@@ -83,7 +199,7 @@ public:
         }
     }
 
-    void addShape(const std::shared_ptr<Shape>& shape) {
+    void addShape(const std::shared_ptr<Shape> &shape) {
         for (const auto &s: shapes) {
             if (s->isSameSpot(*shape)) {
                 std::cout << "Shape already exists at the same spot." << std::endl;
@@ -100,21 +216,19 @@ public:
 };
 
 int main() {
-    Blackboard blackboard(20, 10);
+    Blackboard blackboard(58, 32);
 
-    std::shared_ptr<Shape> rect1 = std::make_shared<Rectangle>(1, 1, 8, 6);
+    std::shared_ptr<Shape> rect1 = std::make_shared<Rectangle>(1, 1, 9, 7);
     blackboard.addShape(rect1);
 
-    std::shared_ptr<Shape> rect2 = std::make_shared<Rectangle>(3, 4, 7, 5);
-    blackboard.addShape(rect2);
+    std::shared_ptr<Shape> circ1 = std::make_shared<Circle>(9, 9, 7);
+    blackboard.addShape(circ1);
 
-    blackboard.draw();
+    std::shared_ptr<Triangle> trig1 = std::make_shared<Triangle>(22, 1, 8, 15);
+    blackboard.addShape(trig1);
 
-    blackboard.clear();
-
-    blackboard.draw();
-
-    blackboard.addShape(rect2);
+    std::shared_ptr<Line> line1 = std::make_shared<Line>(7, 5, 18, 5);
+    blackboard.addShape(line1);
 
     blackboard.draw();
 
