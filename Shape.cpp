@@ -41,6 +41,14 @@ std::string Rectangle::getType() const {
     return "Rectangle";
 }
 
+int Rectangle::getWidth() const {
+    return width;
+}
+
+int Rectangle::getHeight() const {
+    return height;
+}
+
 Circle::Circle(int x, int y, int r) : Shape(x, y), radius(r) {}
 
 
@@ -69,6 +77,10 @@ bool Circle::isSameSpot(const Shape &other) const {
 
 std::string Circle::getType() const {
     return "Circle";
+}
+
+int Circle::getRadius() const {
+    return radius;
 }
 
 
@@ -105,6 +117,14 @@ std::string Triangle::getType() const {
     return "Triangle";
 }
 
+int Triangle::getHeight() const {
+    return height;
+}
+
+int Triangle::getWidth() const {
+    return width;
+}
+
 Line::Line(int x, int y, int l, double a) : Shape(x, y), length(l), angle(a) {}
 
 void Line::draw(std::vector<std::vector<char>> &board) const {
@@ -130,4 +150,12 @@ bool Line::isSameSpot(const Shape &other) const {
 
 std::string Line::getType() const {
     return "Line";
+}
+
+double Line::getAngle() const {
+    return angle;
+}
+
+int Line::getLength() const {
+    return length;
 }

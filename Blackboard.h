@@ -1,7 +1,6 @@
 #ifndef BLACKBOARD_H
 #define BLACKBOARD_H
 
-
 #include <vector>
 #include <memory>
 #include "Shape.h"
@@ -23,7 +22,14 @@ public:
     void addShape(const std::shared_ptr<Shape> &shape);
 
     void clear();
-};
 
+    void listShapes() const;
+
+    void undo();
+
+    void save(const std::string &filePath) const;
+
+    void load(const std::string &filePath);
+};
 
 #endif

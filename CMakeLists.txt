@@ -7,4 +7,6 @@ add_executable(ShapesBlackBoard main.cpp
         Shape.cpp
         Shape.h
         Blackboard.cpp
-        Blackboard.h)
+        Blackboard.h
+        RaiiWrapper.cpp
+        RaiiWrapper.h)

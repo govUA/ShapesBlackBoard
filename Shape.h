@@ -34,6 +34,10 @@ public:
     bool isSameSpot(const Shape &other) const override;
 
     std::string getType() const override;
+
+    int getWidth() const;
+
+    int getHeight() const;
 };
 
 class Circle : public Shape {
@@ -48,6 +52,8 @@ public:
     bool isSameSpot(const Shape &other) const override;
 
     std::string getType() const override;
+
+    int getRadius() const;
 };
 
 class Triangle : public Shape {
@@ -63,6 +69,10 @@ public:
     bool isSameSpot(const Shape &other) const override;
 
     std::string getType() const override;
+
+    int getHeight() const;
+
+    int getWidth() const;
 };
 
 class Line : public Shape {
@@ -78,6 +88,10 @@ public:
     bool isSameSpot(const Shape &other) const override;
 
     std::string getType() const override;
+
+    int getLength() const;
+
+    double getAngle() const;
 };
 
 #endif
