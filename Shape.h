@@ -17,6 +17,8 @@ public:
 
     virtual bool isSameSpot(const Shape &other) const = 0;
 
+    virtual bool isWithinBounds(int boardWidth, int boardHeight) const = 0;
+
     virtual std::string getType() const = 0;
 
     std::pair<int, int> getPosition() const;
@@ -38,6 +40,8 @@ public:
     int getWidth() const;
 
     int getHeight() const;
+
+    bool isWithinBounds(int boardWidth, int boardHeight) const;
 };
 
 class Circle : public Shape {
@@ -54,6 +58,8 @@ public:
     std::string getType() const override;
 
     int getRadius() const;
+
+    bool isWithinBounds(int boardWidth, int boardHeight) const;
 };
 
 class Triangle : public Shape {
@@ -73,6 +79,8 @@ public:
     int getHeight() const;
 
     int getWidth() const;
+
+    bool isWithinBounds(int boardWidth, int boardHeight) const;
 };
 
 class Line : public Shape {
@@ -92,6 +100,8 @@ public:
     int getLength() const;
 
     double getAngle() const;
+
+    bool isWithinBounds(int boardWidth, int boardHeight) const;
 };
 
 #endif

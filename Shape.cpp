@@ -49,6 +49,10 @@ int Rectangle::getHeight() const {
     return height;
 }
 
+bool Rectangle::isWithinBounds(int boardWidth, int boardHeight) const {
+    return x >= 0 && y >= 0 && x + width <= boardWidth && y + height <= boardHeight;
+}
+
 Circle::Circle(int x, int y, int r) : Shape(x, y), radius(r) {}
 
 
@@ -83,6 +87,9 @@ int Circle::getRadius() const {
     return radius;
 }
 
+bool Circle::isWithinBounds(int boardWidth, int boardHeight) const {
+    return x - radius >= 0 && x + radius <= boardWidth && y - radius >= 0 && y + radius <= boardHeight;
+}
 
 Triangle::Triangle(int x, int y, int h, int w) : Shape(x, y), height(h), width(w) {}
 
@@ -125,6 +132,10 @@ int Triangle::getWidth() const {
     return width;
 }
 
+bool Triangle::isWithinBounds(int boardWidth, int boardHeight) const {
+    return x >= 0 && y >= 0 && x + width <= boardWidth && y + height <= boardHeight;
+}
+
 Line::Line(int x, int y, int l, double a) : Shape(x, y), length(l), angle(a) {}
 
 void Line::draw(std::vector<std::vector<char>> &board) const {
@@ -158,4 +169,12 @@ double Line::getAngle() const {
 
 int Line::getLength() const {
     return length;
+}
+
+bool Line::isWithinBounds(int boardWidth, int boardHeight) const {
+    double radAngle = angle * M_PI / 180.0;
+    int xEnd = x + length * cos(radAngle);
+    int yEnd = y + length * sin(radAngle);
+
+    return x >= 0 && y >= 0 && xEnd >= 0 && yEnd >= 0 && xEnd <= boardWidth && yEnd <= boardHeight;
 }

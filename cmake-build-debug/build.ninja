@@ -73,6 +73,12 @@ build CMakeFiles/ShapesBlackBoard.dir/RaiiWrapper.cpp.obj: CXX_COMPILER__ShapesB
   OBJECT_DIR = CMakeFiles\ShapesBlackBoard.dir
   OBJECT_FILE_DIR = CMakeFiles\ShapesBlackBoard.dir
 
+build CMakeFiles/ShapesBlackBoard.dir/CLI.cpp.obj: CXX_COMPILER__ShapesBlackBoard_unscanned_Debug E$:/Users/Alyona/CLionProjects/ShapesBlackBoard/CLI.cpp || cmake_object_order_depends_target_ShapesBlackBoard
+  DEP_FILE = CMakeFiles\ShapesBlackBoard.dir\CLI.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\ShapesBlackBoard.dir
+  OBJECT_FILE_DIR = CMakeFiles\ShapesBlackBoard.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ShapesBlackBoard
@@ -81,7 +87,7 @@ build CMakeFiles/ShapesBlackBoard.dir/RaiiWrapper.cpp.obj: CXX_COMPILER__ShapesB
 #############################################
 # Link the executable ShapesBlackBoard.exe
 
-build ShapesBlackBoard.exe: CXX_EXECUTABLE_LINKER__ShapesBlackBoard_Debug CMakeFiles/ShapesBlackBoard.dir/main.cpp.obj CMakeFiles/ShapesBlackBoard.dir/Shape.cpp.obj CMakeFiles/ShapesBlackBoard.dir/Blackboard.cpp.obj CMakeFiles/ShapesBlackBoard.dir/RaiiWrapper.cpp.obj
+build ShapesBlackBoard.exe: CXX_EXECUTABLE_LINKER__ShapesBlackBoard_Debug CMakeFiles/ShapesBlackBoard.dir/main.cpp.obj CMakeFiles/ShapesBlackBoard.dir/Shape.cpp.obj CMakeFiles/ShapesBlackBoard.dir/Blackboard.cpp.obj CMakeFiles/ShapesBlackBoard.dir/RaiiWrapper.cpp.obj CMakeFiles/ShapesBlackBoard.dir/CLI.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\ShapesBlackBoard.dir

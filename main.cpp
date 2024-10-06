@@ -1,13 +1,11 @@
-#include <memory>
-#include "Shape.h"
 #include "Blackboard.h"
-
+#include "CLI.h"
 
 int main() {
-    Blackboard blackboard(58, 32);
+    Blackboard blackboard(16, 16);
+    CLI cli(blackboard);
 
-    blackboard.draw();
-    blackboard.listShapes();
+    cli.run();
 
     return 0;
 }

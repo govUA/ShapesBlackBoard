@@ -30,6 +30,10 @@ void Blackboard::clearBoard() {
 }
 
 void Blackboard::addShape(const std::shared_ptr<Shape> &shape) {
+    if (!shape->isWithinBounds(width, height)) {
+        std::cout << "Shape cannot be placed outside the board or is too large for the board." << std::endl;
+        return;
+    }
     for (const auto &s: shapes) {
         if (s->isSameSpot(*shape)) {
             std::cout << "Shape already exists at the same spot." << std::endl;
@@ -48,7 +52,7 @@ void Blackboard::listShapes() const {
     std::cout << "Shapes on the blackboard:\n";
     for (size_t i = 0; i < shapes.size(); ++i) {
         const auto &shape = shapes[i];
-        std::cout << "ID: " << i << ", Type: " << shape->getType()
+        std::cout << "\tID: " << i << ", Type: " << shape->getType()
                   << ", Position: (" << shape->getPosition().first
                   << ", " << shape->getPosition().second << "), ";
 
@@ -87,7 +91,6 @@ void Blackboard::save(const std::string &filePath) const {
             file.getOutputStream() << shape->getType() << ' ' << shape->getPosition().first << ' '
                                    << shape->getPosition().second;
 
-            // Add shape-specific parameters
             if (shape->getType() == "Rectangle") {
                 const auto *rect = dynamic_cast<const Rectangle *>(shape.get());
                 file.getOutputStream() << ' ' << rect->getWidth() << ' ' << rect->getHeight() << '\n';
@@ -110,6 +113,7 @@ void Blackboard::save(const std::string &filePath) const {
 }
 
 void Blackboard::load(const std::string &filePath) {
+    std::vector<std::shared_ptr<Shape>> loadedShapes;
     try {
         RaiiWrapper file(filePath, false);
 
@@ -120,30 +124,63 @@ void Blackboard::load(const std::string &filePath) {
             int x, y;
             file.getInputStream() >> x >> y;
 
+            if (x < 0 || y < 0 || x >= width || y >= height) {
+                throw std::runtime_error("Invalid position for shape.");
+            }
+
             if (shapeType == "Rectangle") {
                 int width, height;
                 file.getInputStream() >> width >> height;
-                addShape(std::make_shared<Rectangle>(x, y, width, height));
+                if (width <= 0 || height <= 0) {
+                    throw std::runtime_error("Invalid dimensions for Rectangle.");
+                }
+                auto rect = std::make_shared<Rectangle>(x, y, width, height);
+                if (!rect->isWithinBounds(this->width, this->height)) {
+                    throw std::runtime_error("Rectangle out of bounds.");
+                }
+                loadedShapes.push_back(rect);
             } else if (shapeType == "Circle") {
                 int radius;
                 file.getInputStream() >> radius;
-                addShape(std::make_shared<Circle>(x, y, radius));
+                if (radius <= 0) {
+                    throw std::runtime_error("Invalid radius for Circle.");
+                }
+                auto circ = std::make_shared<Circle>(x, y, radius);
+                if (!circ->isWithinBounds(this->width, this->height)) {
+                    throw std::runtime_error("Circle out of bounds.");
+                }
+                loadedShapes.push_back(circ);
             } else if (shapeType == "Triangle") {
                 int height, width;
                 file.getInputStream() >> height >> width;
-                addShape(std::make_shared<Triangle>(x, y, height, width));
+                if (height <= 0 || width <= 0) {
+                    throw std::runtime_error("Invalid dimensions for Triangle.");
+                }
+                auto tri = std::make_shared<Triangle>(x, y, height, width);
+                if (!tri->isWithinBounds(this->width, this->height)) {
+                    throw std::runtime_error("Triangle out of bounds.");
+                }
+                loadedShapes.push_back(tri);
             } else if (shapeType == "Line") {
                 int length;
                 double angle;
                 file.getInputStream() >> length >> angle;
-                addShape(std::make_shared<Line>(x, y, length, angle));
+                if (length <= 0) {
+                    throw std::runtime_error("Invalid length for Line.");
+                }
+                auto line = std::make_shared<Line>(x, y, length, angle);
+                if (!line->isWithinBounds(this->width, this->height)) {
+                    throw std::runtime_error("Line out of bounds.");
+                }
+                loadedShapes.push_back(line);
             } else {
-                std::cerr << "Unknown shape type in file: " << shapeType << std::endl;
+                throw std::runtime_error("Unknown shape type: " + shapeType);
             }
         }
-
+        clear();
+        shapes = std::move(loadedShapes);
         std::cout << "Blackboard loaded from " << filePath << std::endl;
     } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Failed to load blackboard: " << e.what() << std::endl;
     }
 }

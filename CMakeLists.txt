@@ -9,4 +9,6 @@ add_executable(ShapesBlackBoard main.cpp
         Blackboard.cpp
         Blackboard.h
         RaiiWrapper.cpp
-        RaiiWrapper.h)
+        RaiiWrapper.h
+        CLI.cpp
+        CLI.h)
