@@ -8,8 +8,10 @@
 class Shape {
 protected:
     int x, y;
+    char colour;
+    bool fillMode;
 public:
-    Shape(int x, int y);
+    Shape(int x, int y, char colour, bool fillMode);
 
     virtual ~Shape() = default;
 
@@ -22,6 +24,22 @@ public:
     virtual std::string getType() const = 0;
 
     std::pair<int, int> getPosition() const;
+
+    void setColour(char newColour) {
+        colour = newColour;
+    }
+
+    char getColour() const {
+        return colour;
+    }
+
+    void setFillMode(bool mode) {
+        fillMode = mode;
+    }
+
+    bool getFillMode() const {
+        return fillMode;
+    }
 };
 
 class Rectangle : public Shape {
@@ -29,7 +47,7 @@ private:
     int width, height;
 
 public:
-    Rectangle(int x, int y, int w, int h);
+    Rectangle(int x, int y, char colour, bool fillMode, int w, int h);
 
     void draw(std::vector<std::vector<char>> &board) const override;
 
@@ -49,7 +67,7 @@ private:
     int radius;
 
 public:
-    Circle(int x, int y, int r);
+    Circle(int x, int y, char colour, bool fillMode, int r);
 
     void draw(std::vector<std::vector<char>> &board) const override;
 
@@ -68,7 +86,7 @@ private:
     int width;
 
 public:
-    Triangle(int x, int y, int h, int w);
+    Triangle(int x, int y, char colour, bool fillMode, int h, int w);
 
     void draw(std::vector<std::vector<char>> &board) const override;
 
@@ -89,7 +107,7 @@ private:
     double angle;
 
 public:
-    Line(int x, int y, int l, double a);
+    Line(int x, int y, char colour, bool fillMode, int l, double a);
 
     void draw(std::vector<std::vector<char>> &board) const override;
 

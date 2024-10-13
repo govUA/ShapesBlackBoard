@@ -62,33 +62,45 @@ void CLI::printHelp() const {
 
 void CLI::printAvailableShapes() const {
     std::cout << "Available shapes:\n";
-    std::cout << "\trectangle <x> <y> <width> <height>\n";
-    std::cout << "\tcircle <x> <y> <radius>\n";
-    std::cout << "\ttriangle <x> <y> <height> <width>\n";
-    std::cout << "\tline <x> <y> <length> <angle>\n";
+    std::cout << "\trectangle <x> <y> <colour> <fill/frame> <width> <height>\n";
+    std::cout << "\tcircle <x> <y> <colour> <fill/frame> <radius>\n";
+    std::cout << "\ttriangle <x> <y> <colour> <fill/frame> <height> <width>\n";
+    std::cout << "\tline <x> <y> <colour> <length> <angle>\n";
 }
 
 void CLI::addShape(std::istringstream &iss) {
-    std::string shapeType;
+    int x, y;
+    std::string shapeType, fillOrFrame;
     iss >> shapeType;
 
     if (shapeType == "rectangle") {
-        int x, y, width, height;
-        iss >> x >> y >> width >> height;
-        blackboard.addShape(std::make_shared<Rectangle>(x, y, width, height));
+        int width, height;
+        char colour;
+        bool fillMode;
+        iss >> x >> y >> colour >> fillOrFrame >> width >> height;
+        if (fillOrFrame=="fill") fillMode += 1;
+        blackboard.addShape(std::make_shared<Rectangle>(x, y, colour, fillMode, width, height));
     } else if (shapeType == "circle") {
-        int x, y, radius;
-        iss >> x >> y >> radius;
-        blackboard.addShape(std::make_shared<Circle>(x, y, radius));
+        int radius;
+        char colour;
+        bool fillMode;
+        iss >> x >> y >> colour >> fillOrFrame >> radius;
+        if (fillOrFrame=="fill") fillMode += 1;
+        blackboard.addShape(std::make_shared<Circle>(x, y, colour, fillMode, radius));
     } else if (shapeType == "triangle") {
-        int x, y, height, width;
-        iss >> x >> y >> height >> width;
-        blackboard.addShape(std::make_shared<Triangle>(x, y, height, width));
+        int height, width;
+        char colour;
+        bool fillMode;
+        iss >> x >> y >> colour >> fillOrFrame >> height >> width;
+        if (fillOrFrame=="fill") fillMode += 1;
+        blackboard.addShape(std::make_shared<Triangle>(x, y, colour, fillMode, height, width));
     } else if (shapeType == "line") {
-        int x, y, length;
+        int length;
         double angle;
-        iss >> x >> y >> length >> angle;
-        blackboard.addShape(std::make_shared<Line>(x, y, length, angle));
+        char colour;
+        bool fillMode;
+        iss >> x >> y >> colour >> length >> angle;
+        blackboard.addShape(std::make_shared<Line>(x, y, colour, fillMode, length, angle));
     } else {
         std::cout << "Unknown shape type: " << shapeType << std::endl;
     }

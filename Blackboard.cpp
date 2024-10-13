@@ -122,7 +122,9 @@ void Blackboard::load(const std::string &filePath) {
         std::string shapeType;
         while (file.getInputStream() >> shapeType) {
             int x, y;
-            file.getInputStream() >> x >> y;
+            char colour;
+            bool fillMode;
+            file.getInputStream() >> x >> y >> colour >> fillMode;
 
             if (x < 0 || y < 0 || x >= width || y >= height) {
                 throw std::runtime_error("Invalid position for shape.");
@@ -134,7 +136,7 @@ void Blackboard::load(const std::string &filePath) {
                 if (width <= 0 || height <= 0) {
                     throw std::runtime_error("Invalid dimensions for Rectangle.");
                 }
-                auto rect = std::make_shared<Rectangle>(x, y, width, height);
+                auto rect = std::make_shared<Rectangle>(x, y, colour, fillMode, width, height);
                 if (!rect->isWithinBounds(this->width, this->height)) {
                     throw std::runtime_error("Rectangle out of bounds.");
                 }
@@ -145,7 +147,7 @@ void Blackboard::load(const std::string &filePath) {
                 if (radius <= 0) {
                     throw std::runtime_error("Invalid radius for Circle.");
                 }
-                auto circ = std::make_shared<Circle>(x, y, radius);
+                auto circ = std::make_shared<Circle>(x, y, colour, fillMode, radius);
                 if (!circ->isWithinBounds(this->width, this->height)) {
                     throw std::runtime_error("Circle out of bounds.");
                 }
@@ -156,7 +158,7 @@ void Blackboard::load(const std::string &filePath) {
                 if (height <= 0 || width <= 0) {
                     throw std::runtime_error("Invalid dimensions for Triangle.");
                 }
-                auto tri = std::make_shared<Triangle>(x, y, height, width);
+                auto tri = std::make_shared<Triangle>(x, y, colour, fillMode, height, width);
                 if (!tri->isWithinBounds(this->width, this->height)) {
                     throw std::runtime_error("Triangle out of bounds.");
                 }
@@ -168,7 +170,7 @@ void Blackboard::load(const std::string &filePath) {
                 if (length <= 0) {
                     throw std::runtime_error("Invalid length for Line.");
                 }
-                auto line = std::make_shared<Line>(x, y, length, angle);
+                auto line = std::make_shared<Line>(x, y, colour, fillMode, length, angle);
                 if (!line->isWithinBounds(this->width, this->height)) {
                     throw std::runtime_error("Line out of bounds.");
                 }
