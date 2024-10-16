@@ -66,6 +66,32 @@ bool Rectangle::isWithinBounds(int boardWidth, int boardHeight) const {
     return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight && width <= boardWidth && height <= boardHeight;
 }
 
+bool Rectangle::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+    int boardHeight = board.size();
+    int boardWidth = board[0].size();
+
+    char symbol = getColour();
+
+    if (getFillMode()) {
+        for (int j = this->y; j < this->y + height && j < boardHeight; ++j) {
+            for (int i = this->x; i < this->x + width && i < boardWidth; ++i) {
+                if (i == x && j == y) {
+                    return true;
+                }
+            }
+        }
+    } else {
+        for (int i = this->x; i < this->x + width && i < boardWidth; ++i) {
+            if (this->y >= 0 && this->y < boardHeight) board[this->y][i] = symbol;
+            if (this->y + height - 1 >= 0 && this->y + height - 1 < boardHeight) board[y + height - 1][i] = symbol;
+        }
+        for (int j = this->y; j < this->y + height && j < boardHeight; ++j) {
+            if (x >= 0 && x < boardWidth) board[j][x] = symbol;
+            if (x + width - 1 >= 0 && x + width - 1 < boardWidth) board[j][x + width - 1] = symbol;
+        }
+    }
+}
+
 Circle::Circle(int x, int y, char colour, bool fillMode, int r) : Shape(x, y, colour, fillMode), radius(r) {}
 
 void Circle::editSize(std::vector<float> sizes) {
@@ -113,6 +139,10 @@ int Circle::getRadius() const {
 bool Circle::isWithinBounds(int boardWidth, int boardHeight) const {
     return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight &&
            radius <= (sqrt(pow(boardHeight, 2) + pow(boardWidth, 2)));
+}
+
+bool Circle::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+    return false;
 }
 
 Triangle::Triangle(int x, int y, char colour, bool fillMode, int h, int w) : Shape(x, y, colour, fillMode), height(h),
@@ -185,6 +215,10 @@ bool Triangle::isWithinBounds(int boardWidth, int boardHeight) const {
     return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight && width <= boardWidth && height <= boardHeight;
 }
 
+bool Triangle::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+    return false;
+}
+
 Line::Line(int x, int y, char colour, bool fillMode, int l, double a) : Shape(x, y, colour, fillMode), length(l),
                                                                         angle(a) {}
 
@@ -236,4 +270,8 @@ bool Line::isWithinBounds(int boardWidth, int boardHeight) const {
 
     return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight &&
            length <= (sqrt(pow(boardHeight, 2) + pow(boardWidth, 2)));
+}
+
+bool Line::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+    return false;
 }

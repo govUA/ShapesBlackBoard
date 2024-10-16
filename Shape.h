@@ -30,20 +30,14 @@ public:
 
     virtual std::string getType() const = 0;
 
+    virtual bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const = 0;
+
     std::pair<int, int> getPosition() const;
 
     void editColour(char colour) { this->colour = colour; };
 
-    void setColour(char newColour) {
-        colour = newColour;
-    }
-
     char getColour() const {
         return colour;
-    }
-
-    void setFillMode(bool mode) {
-        fillMode = mode;
     }
 
     bool getFillMode() const {
@@ -70,6 +64,8 @@ public:
 
     std::string getType() const override;
 
+    bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
+
     int getWidth() const;
 
     int getHeight() const;
@@ -92,6 +88,8 @@ public:
 
     std::string getType() const override;
 
+    bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
+
     int getRadius() const;
 
     bool isWithinBounds(int boardWidth, int boardHeight) const;
@@ -112,6 +110,8 @@ public:
     bool isSameSpot(const Shape &other) const override;
 
     std::string getType() const override;
+
+    bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
 
     int getHeight() const;
 
@@ -135,6 +135,8 @@ public:
     bool isSameSpot(const Shape &other) const override;
 
     std::string getType() const override;
+
+    bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
 
     int getLength() const;
 

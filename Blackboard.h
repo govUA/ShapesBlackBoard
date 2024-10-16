@@ -7,7 +7,7 @@
 
 class Blackboard {
 private:
-    int width, height, nextShapeId;
+    int width, height, nextShapeId, shapeId;
     std::vector<std::vector<char>> board;
     std::vector<std::shared_ptr<Shape>> shapes;
 
@@ -20,7 +20,7 @@ public:
 
     void addShape(const std::shared_ptr<Shape> &shape);
 
-    void removeShape(int shapeId);
+    void removeShape();
 
     void clear();
 
@@ -32,11 +32,15 @@ public:
 
     void load(const std::string &filePath);
 
-    void editParams(int shapeId, const std::vector<float> &values);
+    void editParams(const std::vector<float> &values);
 
-    void editPosition(int shapeId, int x, int y);
+    void editPosition(int x, int y);
 
-    void editColour(int shapeId, char colour);
+    void editColour(char colour);
+
+    void selectId(int shapeId);
+
+    void selectPosition(int x, int y);
 };
 
 #endif

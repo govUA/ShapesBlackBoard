@@ -186,7 +186,7 @@ void Blackboard::load(const std::string &filePath) {
     }
 }
 
-void Blackboard::removeShape(int shapeId) {
+void Blackboard::removeShape() {
     if (shapeId < 0 || shapeId >= shapes.size()) {
         std::cout << "Invalid shape ID!" << std::endl;
         return;
@@ -195,7 +195,7 @@ void Blackboard::removeShape(int shapeId) {
     std::cout << "Shape removed successfully." << std::endl;
 }
 
-void Blackboard::editParams(int shapeId, const std::vector<float> &values) {
+void Blackboard::editParams(const std::vector<float> &values) {
     if (shapeId < 0 || shapeId >= shapes.size()) {
         std::cout << "Invalid shape ID!" << std::endl;
         return;
@@ -203,7 +203,7 @@ void Blackboard::editParams(int shapeId, const std::vector<float> &values) {
     shapes[shapeId]->editSize(values);
 }
 
-void Blackboard::editPosition(int shapeId, int x, int y) {
+void Blackboard::editPosition(int x, int y) {
     if (shapeId < 0 || shapeId >= shapes.size()) {
         std::cout << "Invalid shape ID!" << std::endl;
         return;
@@ -216,10 +216,22 @@ void Blackboard::editPosition(int shapeId, int x, int y) {
     }
 }
 
-void Blackboard::editColour(int shapeId, char colour) {
+void Blackboard::editColour(char colour) {
     if (shapeId < 0 || shapeId >= shapes.size()) {
         std::cout << "Invalid shape ID!" << std::endl;
         return;
     }
     shapes[shapeId]->editColour(colour);
+}
+
+void Blackboard::selectId(int shapeId) {
+    this->shapeId = shapeId;
+}
+
+void Blackboard::selectPosition(int x, int y) {
+    for (const auto &shape:shapes) {
+        if (shape->coversPoint(board,x,y)){
+            this->shapeId = shape->getId();
+        }
+    }
 }

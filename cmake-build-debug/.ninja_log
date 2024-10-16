@@ -70,3 +70,15 @@
 2947	3788	7507714844831445	ShapesBlackBoard.exe	7e0f76cdf3813ef
 7	1417	7507716114458026	CMakeFiles/ShapesBlackBoard.dir/Blackboard.cpp.obj	7390bd2b66cf490b
 1417	1738	7507716117674374	ShapesBlackBoard.exe	7e0f76cdf3813ef
+49	6322	7507764727950966	CMakeFiles/ShapesBlackBoard.dir/main.cpp.obj	991d42bf2cbb47c0
+110	6388	7507764728739520	CMakeFiles/ShapesBlackBoard.dir/Shape.cpp.obj	93e63296cacae50a
+129	7446	7507764739308776	CMakeFiles/ShapesBlackBoard.dir/CLI.cpp.obj	30bf16fbeb95af5a
+122	8431	7507764749112259	CMakeFiles/ShapesBlackBoard.dir/Blackboard.cpp.obj	7390bd2b66cf490b
+8431	9745	7507764762460540	ShapesBlackBoard.exe	7e0f76cdf3813ef
+488	2865	7508145395233373	CMakeFiles/ShapesBlackBoard.dir/main.cpp.obj	991d42bf2cbb47c0
+736	2910	7508145395873449	CMakeFiles/ShapesBlackBoard.dir/Shape.cpp.obj	93e63296cacae50a
+742	3050	7508145397263362	CMakeFiles/ShapesBlackBoard.dir/CLI.cpp.obj	30bf16fbeb95af5a
+739	3275	7508145399503729	CMakeFiles/ShapesBlackBoard.dir/Blackboard.cpp.obj	7390bd2b66cf490b
+3275	6797	7508145434715872	ShapesBlackBoard.exe	7e0f76cdf3813ef
+7	1088	7508146702569480	CMakeFiles/ShapesBlackBoard.dir/CLI.cpp.obj	30bf16fbeb95af5a
+1088	1406	7508146705737383	ShapesBlackBoard.exe	7e0f76cdf3813ef

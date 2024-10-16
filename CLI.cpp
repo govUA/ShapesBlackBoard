@@ -30,29 +30,39 @@ void CLI::processCommand(const std::string &command) {
     } else if (cmd == "remove") {
         int shapeId;
         iss >> shapeId;
-        blackboard.removeShape(shapeId);
+        blackboard.removeShape();
     } else if (cmd == "undo") {
         blackboard.undo();
     } else if (cmd == "clear") {
         blackboard.clear();
+    } else if (cmd == "select") {
+        std::vector<int> params;
+        int param;
+        while (iss >> param) {
+            params.push_back(param);
+        }
+        if (params.size() == 1) {
+            blackboard.selectId(params[0]);
+        } else if (params.size() == 2) {
+            blackboard.selectPosition(params[0], params[1]);
+        } else {
+            std::cout << "Invalid amount of arguments." << std::endl;
+        }
     } else if (cmd == "edit") {
-        int shapeId;
         float value;
         std::vector<float> values;
-        iss >> shapeId;
         while (iss >> value) {
             values.push_back(value);
         }
-        blackboard.editParams(shapeId, values);
+        blackboard.editParams(values);
     } else if (cmd == "move") {
-        int shapeId, x, y;
-        iss >> shapeId >> x >> y;
-        blackboard.editPosition(shapeId, x, y);
+        int x, y;
+        iss >> x >> y;
+        blackboard.editPosition(x, y);
     } else if (cmd == "paint") {
-        int shapeId;
         char colour;
-        iss >> shapeId >> colour;
-        blackboard.editColour(shapeId, colour);
+        iss >> colour;
+        blackboard.editColour(colour);
     } else if (cmd == "save") {
         std::string filePath;
         iss >> filePath;
@@ -76,9 +86,10 @@ void CLI::printHelp() const {
                  "\tadd <shape> <parameters>     - Add shape to the blackboard.\n"
                  "\tundo                         - Remove the last added shape from the blackboard.\n"
                  "\tclear                        - Remove all shapes from the blackboard.\n"
-                 "\tedit <shape-id> <parameters> - Edit shape parameters.\n"
-                 "\tmove <shape-id> <x> <y>      - Move shape to new coordinates.\n"
-                 "\tpaint <shape-id> <colour>    - Paint shape new colour.\n"
+                 "\tselect <id|position>         - Select shape by id or position.\n"
+                 "\tedit <parameters>            - Edit shape parameters.\n"
+                 "\tmove <x> <y>                 - Move shape to new coordinates.\n"
+                 "\tpaint <colour>               - Paint shape new colour.\n"
                  "\tsave <file-path>             - Save the blackboard to the file.\n"
                  "\tload <file-path>             - Load a blackboard from the file.\n"
                  "\thelp                         - Show this help message.\n"
