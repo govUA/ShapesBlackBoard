@@ -9,6 +9,15 @@ std::pair<int, int> Shape::getPosition() const {
 Rectangle::Rectangle(int x, int y, char colour, bool fillMode, int w, int h) : Shape(x, y, colour, fillMode), width(w),
                                                                                height(h) {}
 
+void Rectangle::editSize(std::vector<float> sizes) {
+    if (sizes.size() == 2) {
+        this->width = int(sizes[0]);
+        this->height = int(sizes[1]);
+    } else {
+        std::cout << "Rectangle requires 2 size parameters (width and height)." << std::endl;
+    }
+}
+
 void Rectangle::draw(std::vector<std::vector<char>> &board) const {
     int boardHeight = board.size();
     int boardWidth = board[0].size();
@@ -54,11 +63,18 @@ int Rectangle::getHeight() const {
 }
 
 bool Rectangle::isWithinBounds(int boardWidth, int boardHeight) const {
-    return x >= 0 && y >= 0 && x + width <= boardWidth && y + height <= boardHeight;
+    return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight && width <= boardWidth && height <= boardHeight;
 }
 
 Circle::Circle(int x, int y, char colour, bool fillMode, int r) : Shape(x, y, colour, fillMode), radius(r) {}
 
+void Circle::editSize(std::vector<float> sizes) {
+    if (sizes.size() == 1) {
+        this->radius = int(sizes[0]);
+    } else {
+        std::cout << "Circle requires 1 size parameter (radius)." << std::endl;
+    }
+}
 
 void Circle::draw(std::vector<std::vector<char>> &board) const {
     int boardHeight = board.size();
@@ -95,11 +111,21 @@ int Circle::getRadius() const {
 }
 
 bool Circle::isWithinBounds(int boardWidth, int boardHeight) const {
-    return x - radius >= 0 && x + radius <= boardWidth && y - radius >= 0 && y + radius <= boardHeight;
+    return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight &&
+           radius <= (sqrt(pow(boardHeight, 2) + pow(boardWidth, 2)));
 }
 
 Triangle::Triangle(int x, int y, char colour, bool fillMode, int h, int w) : Shape(x, y, colour, fillMode), height(h),
                                                                              width(w) {}
+
+void Triangle::editSize(std::vector<float> sizes) {
+    if (sizes.size() == 2) {
+        this->width = int(sizes[0]);
+        this->height = int(sizes[1]);
+    } else {
+        std::cout << "Triangle requires 2 size parameters (width and height)." << std::endl;
+    }
+}
 
 void Triangle::draw(std::vector<std::vector<char>> &board) const {
     int boardHeight = board.size();
@@ -156,11 +182,20 @@ int Triangle::getWidth() const {
 }
 
 bool Triangle::isWithinBounds(int boardWidth, int boardHeight) const {
-    return x >= 0 && y >= 0 && x + width <= boardWidth && y + height <= boardHeight;
+    return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight && width <= boardWidth && height <= boardHeight;
 }
 
 Line::Line(int x, int y, char colour, bool fillMode, int l, double a) : Shape(x, y, colour, fillMode), length(l),
                                                                         angle(a) {}
+
+void Line::editSize(std::vector<float> sizes) {
+    if (sizes.size() == 1) {
+        this->length = int(sizes[0]);
+        this->angle = sizes[1];
+    } else {
+        std::cout << "Triangle requires 2 size parameters (length and angle)." << std::endl;
+    }
+}
 
 void Line::draw(std::vector<std::vector<char>> &board) const {
     int boardHeight = board.size();
@@ -198,9 +233,7 @@ int Line::getLength() const {
 }
 
 bool Line::isWithinBounds(int boardWidth, int boardHeight) const {
-    double radAngle = angle * M_PI / 180.0;
-    int xEnd = x + length * cos(radAngle);
-    int yEnd = y + length * sin(radAngle);
 
-    return x >= 0 && y >= 0 && xEnd >= 0 && yEnd >= 0 && xEnd <= boardWidth && yEnd <= boardHeight;
+    return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight &&
+           length <= (sqrt(pow(boardHeight, 2) + pow(boardWidth, 2)));
 }

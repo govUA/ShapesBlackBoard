@@ -7,13 +7,20 @@
 
 class Shape {
 protected:
-    int x, y;
+    int x, y, id;
     char colour;
     bool fillMode;
 public:
     Shape(int x, int y, char colour, bool fillMode);
 
     virtual ~Shape() = default;
+
+    void editPosition(int x, int y) {
+        this->x = x;
+        this->y = y;
+    };
+
+    virtual void editSize(std::vector<float> sizes) = 0;
 
     virtual void draw(std::vector<std::vector<char>> &board) const = 0;
 
@@ -24,6 +31,8 @@ public:
     virtual std::string getType() const = 0;
 
     std::pair<int, int> getPosition() const;
+
+    void editColour(char colour) { this->colour = colour; };
 
     void setColour(char newColour) {
         colour = newColour;
@@ -40,6 +49,10 @@ public:
     bool getFillMode() const {
         return fillMode;
     }
+
+    int getId() const { return id; }
+
+    void setId(int newId) { id = newId; }
 };
 
 class Rectangle : public Shape {
@@ -48,6 +61,8 @@ private:
 
 public:
     Rectangle(int x, int y, char colour, bool fillMode, int w, int h);
+
+    virtual void editSize(std::vector<float> sizes) override;
 
     void draw(std::vector<std::vector<char>> &board) const override;
 
@@ -69,6 +84,8 @@ private:
 public:
     Circle(int x, int y, char colour, bool fillMode, int r);
 
+    virtual void editSize(std::vector<float> sizes) override;
+
     void draw(std::vector<std::vector<char>> &board) const override;
 
     bool isSameSpot(const Shape &other) const override;
@@ -87,6 +104,8 @@ private:
 
 public:
     Triangle(int x, int y, char colour, bool fillMode, int h, int w);
+
+    void editSize(std::vector<float> sizes) override;
 
     void draw(std::vector<std::vector<char>> &board) const override;
 
@@ -108,6 +127,10 @@ private:
 
 public:
     Line(int x, int y, char colour, bool fillMode, int l, double a);
+
+    void editPosition(int x, int y) override;
+
+    void editSize(std::vector<float> sizes) override;
 
     void draw(std::vector<std::vector<char>> &board) const override;
 

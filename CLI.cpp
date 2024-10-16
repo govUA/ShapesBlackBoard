@@ -27,6 +27,10 @@ void CLI::processCommand(const std::string &command) {
         printAvailableShapes();
     } else if (cmd == "add") {
         addShape(iss);
+    } else if (cmd == "remove") {
+        int shapeId;
+        iss >> shapeId;
+        blackboard.removeShape(shapeId);
     } else if (cmd == "undo") {
         blackboard.undo();
     } else if (cmd == "clear") {
@@ -78,21 +82,21 @@ void CLI::addShape(std::istringstream &iss) {
         char colour;
         bool fillMode;
         iss >> x >> y >> colour >> fillOrFrame >> width >> height;
-        if (fillOrFrame=="fill") fillMode += 1;
+        if (fillOrFrame == "fill") fillMode += 1;
         blackboard.addShape(std::make_shared<Rectangle>(x, y, colour, fillMode, width, height));
     } else if (shapeType == "circle") {
         int radius;
         char colour;
         bool fillMode;
         iss >> x >> y >> colour >> fillOrFrame >> radius;
-        if (fillOrFrame=="fill") fillMode += 1;
+        if (fillOrFrame == "fill") fillMode += 1;
         blackboard.addShape(std::make_shared<Circle>(x, y, colour, fillMode, radius));
     } else if (shapeType == "triangle") {
         int height, width;
         char colour;
         bool fillMode;
         iss >> x >> y >> colour >> fillOrFrame >> height >> width;
-        if (fillOrFrame=="fill") fillMode += 1;
+        if (fillOrFrame == "fill") fillMode += 1;
         blackboard.addShape(std::make_shared<Triangle>(x, y, colour, fillMode, height, width));
     } else if (shapeType == "line") {
         int length;

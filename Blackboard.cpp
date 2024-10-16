@@ -2,7 +2,7 @@
 #include "Blackboard.h"
 #include "RaiiWrapper.h"
 
-Blackboard::Blackboard(int w, int h) : width(w), height(h) {
+Blackboard::Blackboard(int w, int h) : width(w), height(h), nextShapeId(0) {
     board.resize(height, std::vector<char>(width, ' '));
 }
 
@@ -41,6 +41,7 @@ void Blackboard::addShape(const std::shared_ptr<Shape> &shape) {
         }
     }
 
+    shape->setId(nextShapeId++);
     shapes.push_back(shape);
 }
 
@@ -50,9 +51,8 @@ void Blackboard::clear() {
 
 void Blackboard::listShapes() const {
     std::cout << "Shapes on the blackboard:\n";
-    for (size_t i = 0; i < shapes.size(); ++i) {
-        const auto &shape = shapes[i];
-        std::cout << "\tID: " << i << ", Type: " << shape->getType()
+    for (const auto &shape: shapes) {
+        std::cout << "\tID: " << shape->getId() << ", Type: " << shape->getType()
                   << ", Position: (" << shape->getPosition().first
                   << ", " << shape->getPosition().second << "), ";
 
@@ -69,8 +69,7 @@ void Blackboard::listShapes() const {
             const auto *line = dynamic_cast<const Line *>(shape.get());
             std::cout << "Length: " << line->getLength() << ", Angle: " << line->getAngle();
         }
-
-        std::cout << '\n';
+        std::cout << std::endl;
     }
 }
 
@@ -185,4 +184,13 @@ void Blackboard::load(const std::string &filePath) {
     } catch (const std::exception &e) {
         std::cerr << "Failed to load blackboard: " << e.what() << std::endl;
     }
+}
+
+void Blackboard::removeShape(int shapeId) {
+    if (shapeId < 0 || shapeId >= shapes.size()) {
+        std::cout << "Invalid shape ID!" << std::endl;
+        return;
+    }
+    shapes.erase(shapes.begin() + shapeId);
+    std::cout << "Shape removed successfully." << std::endl;
 }
