@@ -194,3 +194,32 @@ void Blackboard::removeShape(int shapeId) {
     shapes.erase(shapes.begin() + shapeId);
     std::cout << "Shape removed successfully." << std::endl;
 }
+
+void Blackboard::editParams(int shapeId, const std::vector<float> &values) {
+    if (shapeId < 0 || shapeId >= shapes.size()) {
+        std::cout << "Invalid shape ID!" << std::endl;
+        return;
+    }
+    shapes[shapeId]->editSize(values);
+}
+
+void Blackboard::editPosition(int shapeId, int x, int y) {
+    if (shapeId < 0 || shapeId >= shapes.size()) {
+        std::cout << "Invalid shape ID!" << std::endl;
+        return;
+    }
+    if (x >= 0 && y >= 0 && x < width && y < height) {
+        shapes[shapeId]->editPosition(x, y);
+        std::cout << "Shape #" << shapeId << " moved to (" << x << y << ") successfully." << std::endl;
+    } else {
+        std::cout << "Position out of bounds." << std::endl;
+    }
+}
+
+void Blackboard::editColour(int shapeId, char colour) {
+    if (shapeId < 0 || shapeId >= shapes.size()) {
+        std::cout << "Invalid shape ID!" << std::endl;
+        return;
+    }
+    shapes[shapeId]->editColour(colour);
+}

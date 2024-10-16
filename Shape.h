@@ -128,8 +128,6 @@ private:
 public:
     Line(int x, int y, char colour, bool fillMode, int l, double a);
 
-    void editPosition(int x, int y) override;
-
     void editSize(std::vector<float> sizes) override;
 
     void draw(std::vector<std::vector<char>> &board) const override;

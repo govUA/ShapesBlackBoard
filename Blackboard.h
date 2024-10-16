@@ -31,6 +31,12 @@ public:
     void save(const std::string &filePath) const;
 
     void load(const std::string &filePath);
+
+    void editParams(int shapeId, const std::vector<float> &values);
+
+    void editPosition(int shapeId, int x, int y);
+
+    void editColour(int shapeId, char colour);
 };
 
 #endif
