@@ -70,8 +70,6 @@ bool Rectangle::coversPoint(std::vector<std::vector<char>> &board, int x, int y)
     int boardHeight = board.size();
     int boardWidth = board[0].size();
 
-    char symbol = getColour();
-
     if (getFillMode()) {
         for (int j = this->y; j < this->y + height && j < boardHeight; ++j) {
             for (int i = this->x; i < this->x + width && i < boardWidth; ++i) {
@@ -82,14 +80,19 @@ bool Rectangle::coversPoint(std::vector<std::vector<char>> &board, int x, int y)
         }
     } else {
         for (int i = this->x; i < this->x + width && i < boardWidth; ++i) {
-            if (this->y >= 0 && this->y < boardHeight) board[this->y][i] = symbol;
-            if (this->y + height - 1 >= 0 && this->y + height - 1 < boardHeight) board[y + height - 1][i] = symbol;
+            if ((this->y >= 0 && this->y < boardHeight) && this->y == y && i == x) return true;
+            if ((this->y + height - 1 >= 0 && this->y + height - 1 < boardHeight) && this->y + height - 1 == y &&
+                i == x)
+                return true;
         }
         for (int j = this->y; j < this->y + height && j < boardHeight; ++j) {
-            if (x >= 0 && x < boardWidth) board[j][x] = symbol;
-            if (x + width - 1 >= 0 && x + width - 1 < boardWidth) board[j][x + width - 1] = symbol;
+            if ((this->x >= 0 && this->x < boardWidth) && j == y && this->x == x) return true;
+            if ((this->x + width - 1 >= 0 && this->x + width - 1 < boardWidth) && j == y &&
+                this->x + width - 1 == x)
+                return true;
         }
     }
+    return false;
 }
 
 Circle::Circle(int x, int y, char colour, bool fillMode, int r) : Shape(x, y, colour, fillMode), radius(r) {}
