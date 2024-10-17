@@ -7,7 +7,7 @@
 
 class Blackboard {
 private:
-    int width, height, nextShapeId, shapeId;
+    int width, height,nextShapeId, shapeId;
     std::vector<std::vector<char>> board;
     std::vector<std::shared_ptr<Shape>> shapes;
 

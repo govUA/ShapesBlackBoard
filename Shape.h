@@ -7,7 +7,7 @@
 
 class Shape {
 protected:
-    int x, y, id;
+    int x, y;
     char colour;
     bool fillMode;
 public:
@@ -43,10 +43,6 @@ public:
     bool getFillMode() const {
         return fillMode;
     }
-
-    int getId() const { return id; }
-
-    void setId(int newId) { id = newId; }
 };
 
 class Rectangle : public Shape {

@@ -112,23 +112,20 @@ void CLI::addShape(std::istringstream &iss) {
     if (shapeType == "rectangle") {
         int width, height;
         char colour;
-        bool fillMode;
         iss >> x >> y >> colour >> fillOrFrame >> width >> height;
-        if (fillOrFrame == "fill") fillMode += 1;
+        bool fillMode = (fillOrFrame == "fill") ? 1 : 0;
         blackboard.addShape(std::make_shared<Rectangle>(x, y, colour, fillMode, width, height));
     } else if (shapeType == "circle") {
         int radius;
         char colour;
-        bool fillMode;
         iss >> x >> y >> colour >> fillOrFrame >> radius;
-        if (fillOrFrame == "fill") fillMode += 1;
+        bool fillMode = (fillOrFrame == "fill") ? 1 : 0;
         blackboard.addShape(std::make_shared<Circle>(x, y, colour, fillMode, radius));
     } else if (shapeType == "triangle") {
         int height, width;
         char colour;
-        bool fillMode;
         iss >> x >> y >> colour >> fillOrFrame >> height >> width;
-        if (fillOrFrame == "fill") fillMode += 1;
+        bool fillMode = (fillOrFrame == "fill") ? 1 : 0;
         blackboard.addShape(std::make_shared<Triangle>(x, y, colour, fillMode, height, width));
     } else if (shapeType == "line") {
         int length;

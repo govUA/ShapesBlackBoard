@@ -145,6 +145,22 @@ bool Circle::isWithinBounds(int boardWidth, int boardHeight) const {
 }
 
 bool Circle::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+    int boardHeight = board.size();
+    int boardWidth = board[0].size();
+
+    for (int i = -radius; i <= radius; ++i) {
+        for (int j = -radius; j <= radius; ++j) {
+            int dist = i * i + j * j;
+            if ((getFillMode() && dist <= radius * radius) ||
+                (!getFillMode() && dist >= radius * radius - radius && dist <= radius * radius + radius)) {
+                int drawX = this->x + j;
+                int drawY = this->y + i;
+                if ((drawX >= 0 && drawX < boardWidth && drawY >= 0 && drawY < boardHeight) && drawY == y &&
+                    drawX == x)
+                    return true;
+            }
+        }
+    }
     return false;
 }
 
@@ -185,13 +201,14 @@ void Triangle::draw(std::vector<std::vector<char>> &board) const {
             int drawY = y + i;
 
             if (drawY >= 0 && drawY < boardHeight) {
-                if (leftX >= 0 && leftX < boardWidth) board[drawY][leftX] = symbol;
-                if (rightX >= 0 && rightX < boardWidth) board[drawY][rightX] = symbol;
+                if (leftX >= 0 && leftX < boardWidth) board[drawY][leftX] = colour;
+                if (rightX >= 0 && rightX < boardWidth) board[drawY][rightX] = colour;
             }
         }
+
         for (int j = x - width / 2; j <= x + width / 2 && j < boardWidth; ++j) {
             if (y + height - 1 >= 0 && y + height - 1 < boardHeight) {
-                board[y + height - 1][j] = symbol;
+                board[y + height - 1][j] = colour;
             }
         }
     }
@@ -219,6 +236,39 @@ bool Triangle::isWithinBounds(int boardWidth, int boardHeight) const {
 }
 
 bool Triangle::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+    int boardHeight = board.size();
+    int boardWidth = board[0].size();
+
+    if (getFillMode()) {
+        for (int i = 0; i < height; ++i) {
+            int leftX = this->x - (i * width / height) / 2;
+            int rightX = this->x + (i * width / height) / 2;
+            int drawY = this->y + i;
+
+            if (drawY >= 0 && drawY < boardHeight) {
+                for (int j = leftX; j <= rightX && j < boardWidth; ++j) {
+                    if ((j >= 0) && drawY == y && j == x) return true;
+                }
+            }
+        }
+    } else {
+        for (int i = 0; i < height; ++i) {
+            int leftX = this->x - (i * width / height) / 2;
+            int rightX = this->x + (i * width / height) / 2;
+            int drawY = this->y + i;
+
+            if (drawY >= 0 && drawY < boardHeight) {
+                if ((leftX >= 0 && leftX < boardWidth) && drawY == y && leftX == x) return true;
+                if ((rightX >= 0 && rightX < boardWidth) && drawY == y && rightX == x)return true;
+            }
+        }
+
+        for (int j = this->x - width / 2; j <= this->x + width / 2 && j < boardWidth; ++j) {
+            if (this->y + height - 1 >= 0 && this->y + height - 1 < boardHeight) {
+                if (this->y + height - 1 == y && j == x) return true;
+            }
+        }
+    }
     return false;
 }
 
@@ -226,11 +276,11 @@ Line::Line(int x, int y, char colour, bool fillMode, int l, double a) : Shape(x,
                                                                         angle(a) {}
 
 void Line::editSize(std::vector<float> sizes) {
-    if (sizes.size() == 1) {
+    if (sizes.size() == 2) {
         this->length = int(sizes[0]);
         this->angle = sizes[1];
     } else {
-        std::cout << "Triangle requires 2 size parameters (length and angle)." << std::endl;
+        std::cout << "Line requires 2 size parameters (length and angle)." << std::endl;
     }
 }
 
@@ -276,5 +326,18 @@ bool Line::isWithinBounds(int boardWidth, int boardHeight) const {
 }
 
 bool Line::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+    int boardHeight = board.size();
+    int boardWidth = board[0].size();
+
+    double radAngle = angle * M_PI / 180.0;
+
+    for (int i = 0; i < length; ++i) {
+        int drawX = x + static_cast<int>(i * cos(radAngle));
+        int drawY = y + static_cast<int>(i * sin(radAngle));
+
+        if (drawX >= 0 && drawX < boardWidth && drawY >= 0 && drawY < boardHeight) {
+            if (drawY == y && drawX == x) return true;
+        }
+    }
     return false;
 }

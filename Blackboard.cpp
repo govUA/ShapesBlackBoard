@@ -41,7 +41,6 @@ void Blackboard::addShape(const std::shared_ptr<Shape> &shape) {
         }
     }
 
-    shape->setId(nextShapeId++);
     shapes.push_back(shape);
 }
 
@@ -51,8 +50,9 @@ void Blackboard::clear() {
 
 void Blackboard::listShapes() const {
     std::cout << "Shapes on the blackboard:\n";
-    for (const auto &shape: shapes) {
-        std::cout << "\tID: " << shape->getId() << ", Type: " << shape->getType()
+    for (size_t i = 0; i < shapes.size(); ++i) {
+        const auto &shape = shapes[i];
+        std::cout << "\tID: " << i << ", Type: " << shape->getType()
                   << ", Position: (" << shape->getPosition().first
                   << ", " << shape->getPosition().second << "), ";
 
@@ -224,14 +224,25 @@ void Blackboard::editColour(char colour) {
     shapes[shapeId]->editColour(colour);
 }
 
-void Blackboard::selectId(int shapeId) {
-    this->shapeId = shapeId;
+void Blackboard::selectId(int id) {
+    if (id >= 0 && id < shapes.size()) {
+        shapeId = id;
+        std::cout << "Shape #" << id << " selected.\n";
+    } else {
+        std::cout << "Invalid shape index!" << std::endl;
+    }
 }
 
 void Blackboard::selectPosition(int x, int y) {
-    for (const auto &shape:shapes) {
-        if (shape->coversPoint(board,x,y)){
-            this->shapeId = shape->getId();
+    for (size_t i = 0; i < shapes.size(); ++i) {
+        const auto &shape = shapes[i];
+        if (shape->coversPoint(board, x, y)) {
+            this->shapeId = i;
+            std::cout << "Shape detected at (" << x << ", " << y << ")." << std::endl;
+            return;
+        } else {
+            this->shapeId = -1;
         }
     }
+    std::cout << "No shape detected at (" << x << ", " << y << ")." << std::endl;
 }
