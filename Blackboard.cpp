@@ -86,9 +86,12 @@ void Blackboard::save(const std::string &filePath) const {
     try {
         RaiiWrapper file(filePath, true);
 
+        file.getOutputStream() << width << ' ' << height << '\n';
+
         for (const auto &shape: shapes) {
             file.getOutputStream() << shape->getType() << ' ' << shape->getPosition().first << ' '
-                                   << shape->getPosition().second;
+                                   << shape->getPosition().second << ' ' << shape->getColour() << ' '
+                                   << shape->getFillMode();
 
             if (shape->getType() == "Rectangle") {
                 const auto *rect = dynamic_cast<const Rectangle *>(shape.get());
@@ -115,6 +118,21 @@ void Blackboard::load(const std::string &filePath) {
     std::vector<std::shared_ptr<Shape>> loadedShapes;
     try {
         RaiiWrapper file(filePath, false);
+
+        int newWidth, newHeight;
+        file.getInputStream() >> newWidth >> newHeight;
+
+        if (newWidth <= 0 || newHeight <= 0) {
+            throw std::runtime_error("Invalid board dimensions.");
+        }
+
+        width = newWidth;
+        height = newHeight;
+
+        board.resize(height);
+        for (auto &row: board) {
+            row.resize(width);
+        }
 
         clear();
 
