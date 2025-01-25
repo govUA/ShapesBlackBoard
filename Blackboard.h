@@ -3,13 +3,47 @@
 
 #include <vector>
 #include <memory>
+#include <windows.h>
 #include "Shape.h"
 
 class Blackboard {
 private:
-    int width, height,nextShapeId, shapeId;
+    int width, height, nextShapeId, shapeId;
     std::vector<std::vector<char>> board;
     std::vector<std::shared_ptr<Shape>> shapes;
+
+    enum Colour {
+        BLACK = 0,
+        BLUE = 1,
+        GREEN = 2,
+        RED = 4,
+        YELLOW = 6,
+        WHITE = 7
+    };
+
+    Colour getCharColour(char colourChar) {
+        switch (colourChar) {
+            case 'k':
+                return BLACK;
+            case 'b':
+                return BLUE;
+            case 'g':
+                return GREEN;
+            case 'r':
+                return RED;
+            case 'y':
+                return YELLOW;
+            default:
+                return WHITE;
+        }
+    }
+
+    void setConsoleColour(Colour colour) {
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsole, colour);
+    }
+
+    std::vector<std::vector<std::shared_ptr<Shape>>> undoStack = {};
 
 public:
     Blackboard(int w, int h);
@@ -18,25 +52,23 @@ public:
 
     void clearBoard();
 
-    void addShape(const std::shared_ptr<Shape> &shape);
+    bool addShape(const std::shared_ptr<Shape> &shape);
 
-    void removeShape();
+    bool removeShape();
 
-    void clear();
+    bool clear();
 
     void listShapes() const;
 
-    void undo();
+    bool save(const std::string &filePath) const;
 
-    void save(const std::string &filePath) const;
+    bool load(const std::string &filePath);
 
-    void load(const std::string &filePath);
+    bool editParams(const std::vector<float> &values);
 
-    void editParams(const std::vector<float> &values);
+    bool editPosition(int x, int y);
 
-    void editPosition(int x, int y);
-
-    void editColour(char colour);
+    bool editColour(char colour);
 
     void selectId(int shapeId);
 

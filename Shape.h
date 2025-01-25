@@ -4,20 +4,23 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <sstream>
 
 class Shape {
 protected:
     int x, y;
     char colour;
     bool fillMode;
-public:
+
     Shape(int x, int y, char colour, bool fillMode);
+
+public:
 
     virtual ~Shape() = default;
 
-    void editPosition(int x, int y) {
-        this->x = x;
-        this->y = y;
+    void editPosition(int nx, int ny) {
+        x = nx;
+        y = ny;
     };
 
     virtual void editSize(std::vector<float> sizes) = 0;
@@ -32,6 +35,10 @@ public:
 
     virtual bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const = 0;
 
+    virtual std::string describe() const = 0;
+
+    virtual void serialize(std::ostream &os) const = 0;
+
     std::pair<int, int> getPosition() const;
 
     void editColour(char colour) { this->colour = colour; };
@@ -45,12 +52,12 @@ public:
     }
 };
 
-class Rectangle : public Shape {
+class SRectangle : public Shape {
 private:
     int width, height;
 
 public:
-    Rectangle(int x, int y, char colour, bool fillMode, int w, int h);
+    SRectangle(int x, int y, char colour, bool fillMode, int w, int h);
 
     virtual void editSize(std::vector<float> sizes) override;
 
@@ -61,6 +68,17 @@ public:
     std::string getType() const override;
 
     bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
+
+    std::string describe() const override {
+        std::ostringstream oss;
+        oss << "Width: " << width << ", Height: " << height;
+        return oss.str();
+    }
+
+    void serialize(std::ostream &os) const override {
+        os << getType() << ' ' << getPosition().first << ' ' << getPosition().second << ' '
+           << getColour() << ' ' << getFillMode() << ' ' << width << ' ' << height << '\n';
+    }
 
     int getWidth() const;
 
@@ -86,6 +104,17 @@ public:
 
     bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
 
+    std::string describe() const override {
+        std::ostringstream oss;
+        oss << "Radius: " << radius;
+        return oss.str();
+    }
+
+    void serialize(std::ostream &os) const override {
+        os << getType() << ' ' << getPosition().first << ' ' << getPosition().second << ' '
+           << getColour() << ' ' << getFillMode() << ' ' << radius << '\n';
+    }
+
     int getRadius() const;
 
     bool isWithinBounds(int boardWidth, int boardHeight) const;
@@ -108,6 +137,17 @@ public:
     std::string getType() const override;
 
     bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
+
+    std::string describe() const override {
+        std::ostringstream oss;
+        oss << "Width: " << width << ", Height: " << height;
+        return oss.str();
+    }
+
+    void serialize(std::ostream &os) const override {
+        os << getType() << ' ' << getPosition().first << ' ' << getPosition().second << ' '
+           << getColour() << ' ' << getFillMode() << ' ' << height << ' ' << width << '\n';
+    }
 
     int getHeight() const;
 
@@ -133,6 +173,17 @@ public:
     std::string getType() const override;
 
     bool coversPoint(std::vector<std::vector<char>> &board, int x, int y) const override;
+
+    std::string describe() const override {
+        std::ostringstream oss;
+        oss << "Length: " << length << ", Angle: " << angle;
+        return oss.str();
+    }
+
+    void serialize(std::ostream &os) const override {
+        os << getType() << ' ' << getPosition().first << ' ' << getPosition().second << ' '
+           << getColour() << ' ' << getFillMode() << ' ' << length << ' ' << angle << '\n';
+    }
 
     int getLength() const;
 

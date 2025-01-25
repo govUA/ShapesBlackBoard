@@ -5,6 +5,7 @@ CLI::CLI(Blackboard &b) : blackboard(b) {};
 void CLI::run() {
     std::string command;
     printHelp();
+    blackboard.save("temp" + std::to_string(action));
     while (true) {
         std::cout << ">";
         std::getline(std::cin, command);
@@ -15,6 +16,7 @@ void CLI::run() {
 }
 
 void CLI::processCommand(const std::string &command) {
+    bool change = false;
     std::istringstream iss(command);
     std::string cmd;
     iss >> cmd;
@@ -26,15 +28,19 @@ void CLI::processCommand(const std::string &command) {
     } else if (cmd == "shapes") {
         printAvailableShapes();
     } else if (cmd == "add") {
-        addShape(iss);
+        change = addShape(iss);
     } else if (cmd == "remove") {
         int shapeId;
         iss >> shapeId;
-        blackboard.removeShape();
+        change = blackboard.removeShape();
     } else if (cmd == "undo") {
-        blackboard.undo();
+        if (action > 0) {
+            action--;
+            blackboard.load("temp"+std::to_string(action));
+            std::cout << "Reverted previous change." << std::endl;
+        } else std::cout<<"No more changes to revert."<<std::endl;
     } else if (cmd == "clear") {
-        blackboard.clear();
+        change = blackboard.clear();
     } else if (cmd == "select") {
         std::vector<int> params;
         int param;
@@ -54,27 +60,32 @@ void CLI::processCommand(const std::string &command) {
         while (iss >> value) {
             values.push_back(value);
         }
-        blackboard.editParams(values);
+        change = blackboard.editParams(values);
     } else if (cmd == "move") {
         int x, y;
         iss >> x >> y;
-        blackboard.editPosition(x, y);
+        change = blackboard.editPosition(x, y);
     } else if (cmd == "paint") {
         char colour;
         iss >> colour;
-        blackboard.editColour(colour);
+        change = blackboard.editColour(colour);
     } else if (cmd == "save") {
         std::string filePath;
         iss >> filePath;
-        blackboard.save(filePath);
+        if (blackboard.save(filePath)) std::cout << "Blackboard saved to " << filePath << std::endl;
     } else if (cmd == "load") {
         std::string filePath;
         iss >> filePath;
-        blackboard.load(filePath);
+        change = blackboard.load(filePath);
+        if (change) std::cout << "Blackboard loaded from " << filePath << std::endl;
     } else if (cmd == "help") {
         printHelp();
     } else {
         std::cout << "Unknown command: " << cmd << std::endl;
+    }
+    if (change) {
+        action++;
+        blackboard.save("temp" + std::to_string(action));
     }
 }
 
@@ -104,7 +115,7 @@ void CLI::printAvailableShapes() const {
     std::cout << "\tline <x> <y> <colour> <length> <angle>\n";
 }
 
-void CLI::addShape(std::istringstream &iss) {
+bool CLI::addShape(std::istringstream &iss) {
     int x, y;
     std::string shapeType, fillOrFrame;
     iss >> shapeType;
@@ -114,19 +125,22 @@ void CLI::addShape(std::istringstream &iss) {
         char colour;
         iss >> x >> y >> colour >> fillOrFrame >> width >> height;
         bool fillMode = (fillOrFrame == "fill") ? 1 : 0;
-        blackboard.addShape(std::make_shared<Rectangle>(x, y, colour, fillMode, width, height));
+        blackboard.addShape(std::make_shared<SRectangle>(x, y, colour, fillMode, width, height));
+        return true;
     } else if (shapeType == "circle") {
         int radius;
         char colour;
         iss >> x >> y >> colour >> fillOrFrame >> radius;
         bool fillMode = (fillOrFrame == "fill") ? 1 : 0;
         blackboard.addShape(std::make_shared<Circle>(x, y, colour, fillMode, radius));
+        return true;
     } else if (shapeType == "triangle") {
         int height, width;
         char colour;
         iss >> x >> y >> colour >> fillOrFrame >> height >> width;
         bool fillMode = (fillOrFrame == "fill") ? 1 : 0;
         blackboard.addShape(std::make_shared<Triangle>(x, y, colour, fillMode, height, width));
+        return true;
     } else if (shapeType == "line") {
         int length;
         double angle;
@@ -134,7 +148,8 @@ void CLI::addShape(std::istringstream &iss) {
         bool fillMode;
         iss >> x >> y >> colour >> length >> angle;
         blackboard.addShape(std::make_shared<Line>(x, y, colour, fillMode, length, angle));
-    } else {
-        std::cout << "Unknown shape type: " << shapeType << std::endl;
+        return true;
     }
+    std::cout << "Unknown shape type: " << shapeType << std::endl;
+    return false;
 }

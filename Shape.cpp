@@ -6,10 +6,11 @@ std::pair<int, int> Shape::getPosition() const {
     return {x, y};
 }
 
-Rectangle::Rectangle(int x, int y, char colour, bool fillMode, int w, int h) : Shape(x, y, colour, fillMode), width(w),
-                                                                               height(h) {}
+SRectangle::SRectangle(int x, int y, char colour, bool fillMode, int w, int h) : Shape(x, y, colour, fillMode),
+                                                                                 width(w),
+                                                                                 height(h) {}
 
-void Rectangle::editSize(std::vector<float> sizes) {
+void SRectangle::editSize(std::vector<float> sizes) {
     if (sizes.size() == 2) {
         this->width = int(sizes[0]);
         this->height = int(sizes[1]);
@@ -18,7 +19,7 @@ void Rectangle::editSize(std::vector<float> sizes) {
     }
 }
 
-void Rectangle::draw(std::vector<std::vector<char>> &board) const {
+void SRectangle::draw(std::vector<std::vector<char>> &board) const {
     int boardHeight = board.size();
     int boardWidth = board[0].size();
 
@@ -44,29 +45,29 @@ void Rectangle::draw(std::vector<std::vector<char>> &board) const {
     }
 }
 
-bool Rectangle::isSameSpot(const Shape &other) const {
-    const auto *otherRect = dynamic_cast<const Rectangle *>(&other);
+bool SRectangle::isSameSpot(const Shape &other) const {
+    const auto *otherRect = dynamic_cast<const SRectangle *>(&other);
     return otherRect && otherRect->x == x && otherRect->y == y && otherRect->width == width &&
            otherRect->height == height;
 }
 
-std::string Rectangle::getType() const {
+std::string SRectangle::getType() const {
     return "Rectangle";
 }
 
-int Rectangle::getWidth() const {
+int SRectangle::getWidth() const {
     return width;
 }
 
-int Rectangle::getHeight() const {
+int SRectangle::getHeight() const {
     return height;
 }
 
-bool Rectangle::isWithinBounds(int boardWidth, int boardHeight) const {
+bool SRectangle::isWithinBounds(int boardWidth, int boardHeight) const {
     return x >= 0 && y >= 0 && x < boardWidth && y < boardHeight && width <= boardWidth && height <= boardHeight;
 }
 
-bool Rectangle::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
+bool SRectangle::coversPoint(std::vector<std::vector<char>> &board, int x, int y) const {
     int boardHeight = board.size();
     int boardWidth = board[0].size();
 

@@ -20,9 +20,13 @@ private:
 
     void printAvailableShapes() const;
 
-    void addShape(std::istringstream &iss);
+    bool addShape(std::istringstream &iss);
 
     void printHelp() const;
+
+    void undo();
+
+    int action = 0;
 };
 
 #endif
