@@ -1,3 +1,0 @@
-E:/Users/Alyona/CLionProjects/ShapesBlackBoard/cmake-build-debug/CMakeFiles/ShapesBlackBoard.dir
-E:/Users/Alyona/CLionProjects/ShapesBlackBoard/cmake-build-debug/CMakeFiles/edit_cache.dir
-E:/Users/Alyona/CLionProjects/ShapesBlackBoard/cmake-build-debug/CMakeFiles/rebuild_cache.dir
